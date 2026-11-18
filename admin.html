@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CampusRide admin panel: registered students, bookings and ride occupancy.">
+  <meta name="author" content="IMS566 Student">
+  <title>Admin | CampusRide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app-nav"></div>
+
+  <main class="container">
+    <header class="page-head">
+      <h1>Admin panel</h1>
+      <p>Only administrators can see this page.</p>
+    </header>
+
+    <!-- Summary cards -->
+    <section class="row g-3 mb-3" aria-label="Summary">
+      <div class="col-md-4"><div class="panel stat"><div class="num" id="aUsers">0</div><div class="lbl">Registered students</div></div></div>
+      <div class="col-md-4"><div class="panel stat alt"><div class="num" id="aBookings">0</div><div class="lbl">Active bookings</div></div></div>
+      <div class="col-md-4"><div class="panel stat"><div class="num" id="aRevenue">RM 0</div><div class="lbl">Booking value</div></div></div>
+    </section>
+
+    <section class="row g-3" aria-label="Admin tables">
+      <div class="col-lg-5">
+        <div class="panel">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+         <h2 class="mb-0">Registered students</h2>
+         <button class="btn btn-outline-danger btn-sm" id="resetUsersBtn">Reset list</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead><tr><th>Name</th><th>Username</th></tr></thead>
+              <tbody id="userBody"></tbody>
+            </table>
+          </div>
+          <p id="noUsers" class="text-muted d-none mb-0">No students have registered in this browser yet.</p>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="panel">
+          <h2>Ride occupancy</h2>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead><tr><th>Route</th><th>Driver</th><th>Booked</th></tr></thead>
+              <tbody id="occBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Admin-only guard: non-admins are redirected away
+    if (SRBS.requireAdmin()) {
+      SRBS.layout('admin.html');
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+
+      // Summary
+      const users = SRBS.accounts();
+      const active = SRBS.getBookings().filter(b => b.status !== 'Cancelled');
+      document.getElementById('aUsers').textContent = users.length;
+      document.getElementById('aBookings').textContent = active.length;
+      document.getElementById('aRevenue').textContent = SRBS.rm(active.reduce((s, b) => s + b.seats * SRBS.rideById(b.rideId).price, 0));
+
+      // Registered students (passwords are never shown)
+      document.getElementById('userBody').innerHTML = users.map(u =>
+        '<tr><td>' + SRBS.esc(u.name) + '</td><td>' + SRBS.esc(u.username) + '</td></tr>').join('');
+      document.getElementById('noUsers').classList.toggle('d-none', users.length > 0);
+
+      // Seats booked per upcoming ride
+      document.getElementById('occBody').innerHTML = SRBS.rides.filter(r => r.date >= today).map(r => {
+        const booked = r.seats - SRBS.seatsLeft(r);
+        return '<tr><td class="route">' + SRBS.esc(r.from) + '<small>to ' + SRBS.esc(r.to) + '</small></td><td>' +
+          SRBS.esc(r.driver) + '</td><td>' + booked + ' / ' + r.seats + '</td></tr>';
+      }).join('');
+
+      // Reset all registered student accounts
+      document.getElementById('resetUsersBtn').addEventListener('click', () => {
+       if (!confirm('Delete all registered student accounts? This cannot be undone.')) return;
+       SRBS.resetAccounts();
+       location.reload();
+      });
+    }
+  </script>
+</body>
+</html>

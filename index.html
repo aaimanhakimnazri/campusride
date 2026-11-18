@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CampusRide - log in to book student rides from UiTM Kampus Machang to town, Kota Bharu and the airport.">
+  <meta name="author" content="IMS566 Student">
+  <title>Log in | CampusRide Student Ride Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <main class="login-wrap">
+    <!-- Brand panel -->
+    <section class="login-side" aria-label="About CampusRide">
+      <div class="brand-font fs-4 fw-bold"><span class="brand-dot d-inline-block rounded-circle me-2" style="width:12px;height:12px;background:var(--lantern)"></span>CampusRide</div>
+      <div>
+        <h1>Demo Nok Gi Mano? Jom Guno CampusRide!</h1>
+        <div class="route-line" aria-hidden="true">
+          <span class="stop">Machang</span><span class="dash"></span>
+          <span class="stop">Kota Bharu</span><span class="dash"></span>
+          <span class="stop">Airport</span>
+        </div>
+        <p>Book a seat with a fellow student or the campus shuttle. Pay per seat, cancel any time before the ride.</p>
+      </div>
+      <small class="text-white-50">IMS566 Individual Project &middot; UiTM Kelantan, Kampus Machang</small>
+    </section>
+
+    <!-- Form panel -->
+    <section class="login-form-side">
+      <div class="login-box">
+        <h2 class="h3 mb-3">Welcome</h2>
+        <ul class="nav nav-tabs mb-3" role="tablist">
+          <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-login" type="button" role="tab">Log in</button></li>
+          <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-register" type="button" role="tab">Register</button></li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Login -->
+          <div class="tab-pane fade show active" id="tab-login" role="tabpanel">
+            <div id="loginError" class="alert alert-danger d-none" role="alert"></div>
+            <div id="regOk" class="alert alert-success d-none" role="status">Account created. Log in below.</div>
+            <form id="loginForm" novalidate>
+              <div class="mb-3">
+                <label for="loginUser" class="form-label">Username</label>
+                <input type="text" class="form-control" id="loginUser" autocomplete="username" required>
+              </div>
+              <div class="mb-3">
+                <label for="loginPass" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPass" autocomplete="current-password" required>
+              </div>
+              <button class="btn btn-primary w-100 mb-3" type="submit">Log in</button>
+            </form>
+            
+          </div>
+
+          <!-- Register -->
+          <div class="tab-pane fade" id="tab-register" role="tabpanel">
+            <div id="regError" class="alert alert-danger d-none" role="alert"></div>
+            <form id="regForm" novalidate>
+              <div class="mb-3"><label for="regName" class="form-label">Full name</label><input type="text" class="form-control" id="regName" required></div>
+              <div class="mb-3"><label for="regUser" class="form-label">Username</label><input type="text" class="form-control" id="regUser" autocomplete="username" required></div>
+              <div class="mb-3"><label for="regPass" class="form-label">Password</label><input type="password" class="form-control" id="regPass" autocomplete="new-password" required></div>
+              <button class="btn btn-primary w-100" type="submit">Create account</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Already logged in? Go straight to the dashboard.
+    if (SRBS.user()) location.replace('dashboard.html');
+
+    const show = (id, msg) => { const el = document.getElementById(id); el.textContent = msg; el.classList.remove('d-none'); };
+    const hide = id => document.getElementById(id).classList.add('d-none');
+
+    // Login submit
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault(); hide('loginError'); hide('regOk');
+      const res = SRBS.login(document.getElementById('loginUser').value, document.getElementById('loginPass').value);
+      if (res.ok) location.href = 'dashboard.html';
+      else show('loginError', res.msg);
+    });
+
+    // Register submit (accounts are saved in the browser only)
+    document.getElementById('regForm').addEventListener('submit', e => {
+      e.preventDefault(); hide('regError');
+      const res = SRBS.register(document.getElementById('regName').value, document.getElementById('regUser').value, document.getElementById('regPass').value);
+      if (!res.ok) return show('regError', res.msg);
+      e.target.reset();
+      bootstrap.Tab.getOrCreateInstance(document.querySelector('[data-bs-target="#tab-login"]')).show();
+      document.getElementById('regOk').classList.remove('d-none');
+    });
+  </script>
+</body>
+</html>
