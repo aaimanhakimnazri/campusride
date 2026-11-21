@@ -6,8 +6,8 @@ CampusRide is a front-end prototype where UiTM Kelantan (Kampus Machang) student
 
 ## Live demo and repository
 
-- Live site (GitHub Pages): `https://aaimanhakimnazri.github.io/campusride/`
-- Repository: `https://github.com/aaimanhakimnazri/campusride`
+- Live site (GitHub Pages): https://aaimanhakimnazri.github.io/campusride/
+- Repository: https://github.com/aaimanhakimnazri/campusride
 
 ## Features
 
