@@ -61,17 +61,6 @@ css/style.css    Custom styles
 js/app.js        Shared data, auth, navbar and footer
 ```
 
-## Run locally
-
-Open `index.html` in Google Chrome. No installation is needed.
-
-## Deploy to GitHub Pages
-
-1. Create a new public repository on GitHub and upload all the files above (keep the folder structure).
-2. Go to **Settings > Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**, select `main` and `/ (root)`, then **Save**.
-4. After a minute, your site is live at `https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/`.
-
 ## Notes
 
 - All data is for demonstration only. No real bookings or payments are made.
