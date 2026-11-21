@@ -6,8 +6,8 @@ CampusRide is a front-end prototype where UiTM Kelantan (Kampus Machang) student
 
 ## Live demo and repository
 
-- Live site (GitHub Pages): `https://aaimanhakimnazri.github.io/campusride/
-- Repository: `https://github.com/aaimanhakimnazri/campusride
+- Live site (GitHub Pages): `https://aaimanhakimnazri.github.io/campusride/`
+- Repository: `https://github.com/aaimanhakimnazri/campusride`
 
 ## Features
 
@@ -17,25 +17,29 @@ CampusRide is a front-end prototype where UiTM Kelantan (Kampus Machang) student
 - **Find Rides (dataset 1):** table of available rides with search, type filter, sorting and a booking pop-up.
 - **My Bookings (dataset 2):** table of bookings with status filter and cancel option.
 - **Drivers (dataset 3):** card grid with vehicle, rating and trip count.
+- **Admin page (admin only):** registered students, active bookings, booking value and ride occupancy. Regular users cannot open it.
 - **Footer and metadata:** every page has a footer, page title, description and author meta tags, and uses semantic sections.
 - Bookings are saved in the browser's `localStorage`, so the charts update when you book or cancel.
 
-## Admin access
+## How to test the login
 
-An admin-only page is available. Log in with:
+### Student account (create your own)
+
+There is no preset student account. Create one first:
+
+1. Open the live site and click the **Register** tab.
+2. Enter your name, a username (4+ letters or numbers) and a password (6+ characters).
+3. Click **Create account**, then log in with the same username and password.
+
+Accounts are saved in the browser's localStorage only (no database), so an account made in one browser will not exist in another.
+
+### Admin account
 
 | Username | Password |
 |----------|----------|
 | `admin` | `admin123` |
 
-## How to test the login
-
-| Username | Password |
-|----------|----------|
-| `student` | `ride123` |
-
-- Wrong details show a red error message.
-- You can also use the **Register** tab to create an account. It is stored only in your browser.
+After logging in as admin, an **Admin** link appears in the navigation bar. Student accounts cannot open the Admin page. They are redirected to the dashboard.
 
 ## Frameworks and libraries
 
@@ -52,11 +56,10 @@ dashboard.html   Dashboard with charts
 rides.html       Available rides + booking
 bookings.html    My bookings
 drivers.html     Drivers
+admin.html       Admin panel (admin only)
 css/style.css    Custom styles
 js/app.js        Shared data, auth, navbar and footer
 ```
-
-Regular student accounts (created via Register) cannot open the Admin page. They are redirected to the dashboard.
 
 ## Run locally
 
@@ -71,4 +74,5 @@ Open `index.html` in Google Chrome. No installation is needed.
 
 ## Notes
 
-All data is for demonstration only. No real bookings or payments are made.
+- All data is for demonstration only. No real bookings or payments are made.
+- Access control is simulated on the front-end. A real system would check roles on the server and store passwords securely (hashed).
